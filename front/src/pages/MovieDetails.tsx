@@ -2,9 +2,18 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
+interface Movie {
+  id: string;
+  title: string;
+  poster_path: string;
+  overview: string;
+  backdrop_path: string;
+}
+
+
 const MovieDetails = () => {
   const { id } = useParams();
-  const [movie, setMovie] = useState(null);
+  const [movie, setMovie] = useState<Movie | null>(null);
   const [reservationDate, setReservationDate] = useState("");
   const userId = localStorage.getItem("userId");
 

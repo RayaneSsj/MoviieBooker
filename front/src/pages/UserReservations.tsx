@@ -1,9 +1,19 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+interface Reservation {
+  _id: string;
+  movieId: string;
+  movieTitle: string;
+  poster_path?: string;
+  startTime: string;
+}
+
+
 const UserReservations = () => {
   const userId = localStorage.getItem("userId");
-  const [reservations, setReservations] = useState([]);
+  const [reservations, setReservations] = useState<Reservation[]>([]);
+
 
   useEffect(() => {
     axios.get(`https://moviiebooker-sy47.onrender.com/reservations?userId=${userId}`)
@@ -13,9 +23,9 @@ const UserReservations = () => {
       .catch((error) => {
         console.error("Erreur lors de la récupération des réservations :", error);
       });
-  }, []);
+  }, [userId]);
 
-  const cancelReservation = async (reservationId) => {
+  const cancelReservation = async (reservationId: string) => {
   try {
     const userId = localStorage.getItem("userId"); // Récupérer l'ID utilisateur
     if (!userId) {
@@ -43,7 +53,7 @@ console.log("Réservations récupérées :", reservations);
       ) : (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))", gap: "20px", padding: "20px" }}>
           {reservations.map((res) => (
-            <div key={res.id} style={{ border: "1px solid #ddd", padding: "10px", borderRadius: "5px" }}>
+            <div key={res._id} style={{ border: "1px solid #ddd", padding: "10px", borderRadius: "5px" }}>
               <img src={`https://image.tmdb.org/t/p/w500${res.poster_path}`} alt={res.movieTitle} style={{ width: "100%" }} />
               <h3>{res.movieTitle}</h3>
               <p>📅 {new Date(res.startTime).toLocaleString()}</p>
