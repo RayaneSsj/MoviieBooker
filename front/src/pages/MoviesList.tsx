@@ -33,7 +33,7 @@ const MoviesList = () => {
 
   const handleSearch = () => {
     if (searchTerm.trim() !== "") {
-      axios.get(`https://moviebooker-sy47.onrender.com/movies/search?query=${searchTerm}`)
+      axios.get(`https://moviiebooker-sy47.onrender.com/movies/search?query=${searchTerm}`)
         .then(response => {
           setMovies(response.data.results || []);
         })
