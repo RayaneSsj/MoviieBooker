@@ -16,25 +16,25 @@ const UserReservations = () => {
   }, []);
 
   const cancelReservation = async (reservationId) => {
-    try {
-      const userId = localStorage.getItem("userId"); // Récupérer l'ID utilisateur
-      if (!userId) {
-        alert("Erreur : utilisateur non connecté !");
-        return;
-      }
-  
-      await axios.delete(`http://localhost:3000/reservations/${reservationId}?userId=${userId}`);
-  
-      alert("Réservation annulée !");
-      
-      // Mettre à jour la liste des réservations en supprimant celle annulée
-      setReservations(reservations.filter(res => res.id !== reservationId));
-    } catch (error) {
-      console.error("Erreur lors de l'annulation :", error);
-      alert("Impossible d'annuler la réservation !");
+  try {
+    const userId = localStorage.getItem("userId"); // Récupérer l'ID utilisateur
+    if (!userId) {
+      alert("Erreur : utilisateur non connecté !");
+      return;
     }
-  };
 
+    await axios.delete(`http://localhost:3000/reservations/${reservationId}?userId=${userId}`);
+
+    alert("Réservation annulée !");
+    
+    // Mettre à jour la liste des réservations en supprimant celle annulée
+    setReservations(reservations.filter(res => res._id !== reservationId));
+  } catch (error) {
+    console.error("Erreur lors de l'annulation :", error);
+    alert("Impossible d'annuler la réservation !");
+  }
+};
+console.log("Réservations récupérées :", reservations);
   return (
     <div style={{ textAlign: "center" }}>
       <h1>Mes Réservations</h1>
@@ -48,10 +48,7 @@ const UserReservations = () => {
               <h3>{res.movieTitle}</h3>
               <p>📅 {new Date(res.startTime).toLocaleString()}</p>
               <button style={{ background: "red", color: "white", padding: "10px", fontSize: "14px", cursor: "pointer" }}
-                onClick={() => {
-                  console.log("ID de la réservation :", reservation.id);
-                  cancelReservation(reservation.id);
-                }}>
+                onClick={() => cancelReservation(res._id)}>
                 Annuler
               </button>
             </div>
