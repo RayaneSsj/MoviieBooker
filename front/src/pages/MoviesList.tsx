@@ -18,7 +18,7 @@ const MoviesList = () => {
   const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
-    console.log("Fetching movies from API:", `https://moviebooker-sy47.onrender.com/movies/now_playing?page=${page}`);
+    console.log("Fetching movies from API:", `https://moviiebooker-sy47.onrender.com/movies/now_playing?page=${page}`);
   
     axios.get(`https://moviiebooker-sy47.onrender.com/movies/now_playing?page=${page}`)
       .then(response => {
