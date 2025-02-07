@@ -10,8 +10,8 @@ const Login = () => {
     e.preventDefault();
 
     const url = isRegister
-      ? "http://localhost:3000/auth/register"
-      : "http://localhost:3000/auth/login";
+      ? "https://moviiebooker-sy47.onrender.com/auth/register"
+      : "https://moviiebooker-sy47.onrender.com/auth/login";
 
     try {
       const response = await axios.post(url, { email, password });

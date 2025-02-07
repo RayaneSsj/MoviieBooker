@@ -15,7 +15,7 @@ const MoviesList = () => {
   const userId = "67a1fc92373b00ef8d80d8c6"; 
 
   useEffect(() => {
-    axios.get(`http://localhost:3000/movies/now_playing?page=${page}`)
+    axios.get(`https://moviiebooker-sy47.onrender.com/movies/now_playing?page=${page}`)
       .then(response => {
         console.log("Réponse API:", response.data);
         setMovies(response.data.results || []);
@@ -28,7 +28,7 @@ const MoviesList = () => {
 
   const handleSearch = () => {
     if (searchTerm.trim() !== "") {
-      axios.get(`http://localhost:3000/movies/search?query=${searchTerm}`)
+      axios.get(`https://moviiebooker-sy47.onrender.com/movies/search?query=${searchTerm}`)
         .then(response => {
           setMovies(response.data.results || []);
         })

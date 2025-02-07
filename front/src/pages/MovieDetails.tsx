@@ -6,14 +6,14 @@ const MovieDetails = () => {
   const { id } = useParams();
   const [movie, setMovie] = useState(null);
   const [reservationDate, setReservationDate] = useState("");
-  const userId = "67a1fc92373b00ef8d80d8c6";
+  const userId = localStorage.getItem("userId");
 
   useEffect(() => {
     console.log("ID du film :", id);
 
     if (!id) return;
 
-    axios.get(`http://localhost:3000/movies/${id}`)
+    axios.get(`https://moviiebooker-sy47.onrender.com/movies/${id}`)
       .then((response) => {
         console.log("Détails du film :", response.data);
         setMovie(response.data);
@@ -37,7 +37,7 @@ const MovieDetails = () => {
     };
 
     try {
-      const response = await axios.post("http://localhost:3000/reservations", reservationData);
+      const response = await axios.post("https://moviiebooker-sy47.onrender.com/reservations", reservationData);
       console.log("Réservation réussie :", response.data);
       alert(`Réservation confirmée pour ${movie.title} le ${new Date(reservationDate).toLocaleString()} !`);
     } catch (error) {

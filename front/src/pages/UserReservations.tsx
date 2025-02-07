@@ -6,7 +6,7 @@ const UserReservations = () => {
   const [reservations, setReservations] = useState([]);
 
   useEffect(() => {
-    axios.get(`http://localhost:3000/reservations?userId=${userId}`)
+    axios.get(`https://moviiebooker-sy47.onrender.com/reservations?userId=${userId}`)
       .then((response) => {
         setReservations(response.data);
       })
@@ -23,7 +23,7 @@ const UserReservations = () => {
       return;
     }
 
-    await axios.delete(`http://localhost:3000/reservations/${reservationId}?userId=${userId}`);
+    await axios.delete(`https://moviiebooker-sy47.onrender.com/reservations/${reservationId}?userId=${userId}`);
 
     alert("Réservation annulée !");
     
