@@ -8,75 +8,74 @@ const Login = () => {
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
     const url = isRegister
-      ? "http://localhost:3000/auth/register"
-      : "http://localhost:3000/auth/login";
-
+      ? "https://moviiebooker-sy47.onrender.com/auth/register"
+      : "https://moviiebooker-sy47.onrender.com/auth/login";
+  
     try {
       const response = await axios.post(url, { email, password });
+  
       console.log("Réponse API:", response.data);
-
+  
       if (!isRegister) {
         console.log("on entre dans la boucle !");
-        if (response.data) {
-          console.log("On entre dans la deuxieme boucle !");
+        if (response.data && response.data.access_token) {
           const token = response.data.access_token;
-          console.log("Token :", token)
-          if (token) {
-            console.log("On entre dans la derniere boucle !")
-            localStorage.setItem("token", token);
-          
-            // Décoder le token pour extraire userId
-            const decodedToken = JSON.parse(atob(token.split(".")[1])); // Décodage du JWT
-            console.log("Decoded token : ", decodedToken);
+          console.log("Token reçu :", token);
+  
+          try {
+            const decodedToken = JSON.parse(atob(token.split(".")[1]));
+            console.log("Decoded token :", decodedToken);
+  
             const userId = decodedToken.userId;
-            console.log("UserId :", userId);
-          
+  
             if (userId) {
+              localStorage.setItem("token", token);
               localStorage.setItem("userId", userId);
               console.log("UserID stocké :", userId);
+  
               window.location.href = "/movies";
             } else {
-              console.error("Impossible de récupérer userId depuis le token :", decodedToken);
+              console.error("Erreur : ID utilisateur absent dans le token", decodedToken);
               alert("Erreur : ID utilisateur manquant !");
             }
-          } else {
-            alert("Erreur : Token manquant !");
+          } catch (err) {
+            console.error("Erreur lors du décodage du token :", err);
+            alert("Erreur : Impossible de traiter le token !");
           }
-
-          window.location.href = "/movies";
         } else {
+          console.error("Réponse API invalide :", response.data);
           alert("Erreur : ID utilisateur ou token manquant !");
         }
       } else {
-        alert("Inscription réussie, vous pouvez vous connecter !");
+        alert("Inscription réussie ! Vous pouvez maintenant vous connecter.");
         setIsRegister(false);
         setEmail("");
         setPassword("");
       }
-    } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
       console.error("Erreur d'authentification :", error);
-      alert("Échec de l'authentification !");
+      console.log("Détails de l'erreur :", error.response?.data);
+      alert(error.response?.data?.message || "Échec de l'authentification !");
     }
+    
   };
+  
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
       <div className="p-8 shadow-lg rounded-lg bg-white w-96">
         <div className="flex justify-between mb-4">
           <button
-            className={`w-1/2 p-2 rounded-l-lg ${
-              !isRegister ? "bg-blue-500 text-white" : "bg-gray-200"
-            }`}
+            className={`w-1/2 p-2 rounded-l-lg ${!isRegister ? "bg-blue-500 text-white" : "bg-gray-200"}`}
             onClick={() => setIsRegister(false)}
           >
             Se connecter
           </button>
           <button
-            className={`w-1/2 p-2 rounded-r-lg ${
-              isRegister ? "bg-blue-500 text-white" : "bg-gray-200"
-            }`}
+            className={`w-1/2 p-2 rounded-r-lg ${isRegister ? "bg-blue-500 text-white" : "bg-gray-200"}`}
             onClick={() => setIsRegister(true)}
           >
             S'inscrire

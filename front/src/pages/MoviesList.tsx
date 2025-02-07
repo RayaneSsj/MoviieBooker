@@ -1,21 +1,26 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import "../MoviesList.css";
 
+interface Movie {
+  id: string;
+  title: string;
+  poster_path: string;
+  overview: string;
+  backdrop_path: string;
+}
+
 const MoviesList = () => {
-  const [movies, setMovies] = useState([]);
+  const [movies, setMovies] = useState<Movie[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const navigate = useNavigate();
-
-  // Remplace cet ID par celui de l'utilisateur connecté si tu utilises un système d'authentification
-  const userId = "67a1fc92373b00ef8d80d8c6"; 
 
   useEffect(() => {
-    axios.get(`http://localhost:3000/movies/now_playing?page=${page}`)
+    console.log("Fetching movies from API:", `https://moviebooker-sy47.onrender.com/movies/now_playing?page=${page}`);
+  
+    axios.get(`https://moviiebooker-sy47.onrender.com/movies/now_playing?page=${page}`)
       .then(response => {
         console.log("Réponse API:", response.data);
         setMovies(response.data.results || []);
@@ -28,7 +33,7 @@ const MoviesList = () => {
 
   const handleSearch = () => {
     if (searchTerm.trim() !== "") {
-      axios.get(`http://localhost:3000/movies/search?query=${searchTerm}`)
+      axios.get(`https://moviebooker-sy47.onrender.com/movies/search?query=${searchTerm}`)
         .then(response => {
           setMovies(response.data.results || []);
         })
@@ -40,13 +45,7 @@ const MoviesList = () => {
 
   return (
     <div className="container">
-      {/* Bouton "Mes Réservations" en haut à droite */}
-      <div className="header">
-        <h1 className="title">Liste des Films</h1>
-        <Link to="/reservations">
-          <button className="reservations-button">Mes Réservations</button>
-        </Link>
-      </div>
+      <h1 className="title">Liste des Films</h1>
 
       {/* Barre de recherche */}
       <div className="search-bar">
@@ -59,10 +58,17 @@ const MoviesList = () => {
         <button onClick={handleSearch}>Rechercher</button>
       </div>
 
-      {/* Liste des films */}
+      {/* Bouton Mes Réservations */}
+      <div style={{ textAlign: "right", marginBottom: "10px" }}>
+        <Link to="/reservations">
+          <button className="reservation-btn">Mes Réservations</button>
+        </Link>
+      </div>
+
+      {/* Affichage des films */}
       <div className="movies-grid">
         {movies.length > 0 ? (
-          movies.map(movie => (
+          movies.map((movie) => (
             <div key={movie.id} className="movie-card">
               <img 
                 src={`https://image.tmdb.org/t/p/w300${movie.backdrop_path}`} 
