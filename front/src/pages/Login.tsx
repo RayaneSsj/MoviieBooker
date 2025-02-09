@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Login = () => {
@@ -6,36 +7,40 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const navigate = useNavigate(); // Utiliser useNavigate pour la redirection
+
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
-  
+
     const url = isRegister
       ? "https://moviiebooker-sy47.onrender.com/auth/register"
       : "https://moviiebooker-sy47.onrender.com/auth/login";
-  
+
     try {
       const response = await axios.post(url, { email, password });
-  
+
       console.log("Réponse API:", response.data);
-  
+
       if (!isRegister) {
         console.log("on entre dans la boucle !");
         if (response.data && response.data.access_token) {
           const token = response.data.access_token;
           console.log("Token reçu :", token);
-  
+
           try {
             const decodedToken = JSON.parse(atob(token.split(".")[1]));
             console.log("Decoded token :", decodedToken);
-  
+
             const userId = decodedToken.userId;
-  
+
             if (userId) {
               localStorage.setItem("token", token);
               localStorage.setItem("userId", userId);
               console.log("UserID stocké :", userId);
-  
-              window.location.href = "/movies";
+
+              // ✅ Correction : Redirection avec HashRouter
+              navigate("/movies"); // Avec HashRouter, cela deviendra `/#/movies`
+
             } else {
               console.error("Erreur : ID utilisateur absent dans le token", decodedToken);
               alert("Erreur : ID utilisateur manquant !");
@@ -54,15 +59,13 @@ const Login = () => {
         setEmail("");
         setPassword("");
       }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error("Erreur d'authentification :", error);
       console.log("Détails de l'erreur :", error.response?.data);
       alert(error.response?.data?.message || "Échec de l'authentification !");
     }
-    
   };
-  
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
