@@ -16,6 +16,12 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
 
   app.enableCors();
+
+  app.useStaticAssets(join(__dirname, '..', 'client/build'));
+
+  app.get('*', (req, res) => {
+    res.sendFile(join(__dirname, '..', 'client/build', 'index.html'));
+  });
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();
