@@ -1,4 +1,4 @@
-import {Routes, Route } from "react-router-dom";
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import HomePage from "./pages/HomePage";
 import MoviesList from "./pages/MoviesList";
 import MovieDetails from "./pages/MovieDetails";
@@ -8,6 +8,7 @@ import "./global.css";
 
 function App() {
   return (
+    <Router>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/movies" element={<MoviesList />} />
@@ -16,6 +17,7 @@ function App() {
         <Route path="/reservations" element={<UserReservations />} />
         <Route path="*" element={<h1>404 - Page Not Found</h1>} />
       </Routes> 
+    </Router>
   );
 }
 
